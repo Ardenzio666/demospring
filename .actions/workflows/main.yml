@@ -1,0 +1,24 @@
+name: Build & Deploy Spring app #Nome che apparirà sulla scheda actions del repository
+
+on: #trigger del workflow, in questo caso una push suò branch master
+  push:
+    branches:
+      - master
+  jobs: #Ogni job è una sequenza di step
+    build-deploy: #Nome del job
+      name: Build and Deploy Spring boot for beginners
+      runs-on: ubuntu-latest #Tipo di ambiente in cui verrà eseguito il job
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3 #Le azioni sono comandi preimpostati di githob. Qui stiamo clonando il repository
+        - name: Setup JDK 21
+          uses: actions/setup-java@v3
+          with: #Parametri dell'azione
+            distributions: 'openjdk'
+            java-version: 21
+        - name: Unit Tests
+          run: mvn -B test --file pom.xml #Invece di una azione github eseguiamo un comando da terminale
+        - name: Build the application
+          run: |
+            mvn clean
+            mvn -B package --file pom.xml
