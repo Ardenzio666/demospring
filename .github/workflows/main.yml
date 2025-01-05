@@ -12,11 +12,10 @@ jobs: #Ogni job è una sequenza di step
       - name: Checkout code
         uses: actions/checkout@v3 #Le azioni sono comandi preimpostati di githob. Qui stiamo clonando il repository
       - name: Setup JDK 21
-        run: |
-          curl -L -o jdk-21.tar.gz https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.tar.gz
-          tar -xzf jdk-21.tar.gz
-          echo "JAVA_HOME=$(pwd)/jdk-21" >> $GITHUB_ENV
-          echo "$(pwd)/jdk-21/bin" >> $GITHUB_PATH
+        uses: actions/setup-java@v3
+        with: #Parametri dell'azione
+          distribution: 'openjdk'
+          java-version: 21
       - name: Unit Tests
         run: mvn -B test --file pom.xml #Invece di una azione github eseguiamo un comando da terminale
       - name: Build the application
